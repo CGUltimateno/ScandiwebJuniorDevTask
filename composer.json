@@ -1,0 +1,11 @@
+{
+  "name": "CGUltimateno/juniorEngineerTask",
+  "autoload": {
+    "psr-4": {
+      "app\\": "./"
+    }
+  },
+  "require": {
+    "ext-pdo": "*"
+  }
+}
