@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2023 at 07:42 AM
+-- Generation Time: Feb 24, 2023 at 01:35 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -28,12 +28,20 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `producttb` (
-  `sku` int(11) NOT NULL,
+  `sku` varchar(20) NOT NULL,
   `name` varchar(255) NOT NULL,
   `price` float NOT NULL,
   `type` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `producttb`
+--
+
+INSERT INTO `producttb` (`sku`, `name`, `price`, `type`, `value`) VALUES
+('6', 'a', 298, '298', 'Size25MBs'),
+('A12', 'AAA', 123, '123', 'Size2MBs');
 
 --
 -- Indexes for dumped tables
@@ -44,16 +52,6 @@ CREATE TABLE `producttb` (
 --
 ALTER TABLE `producttb`
   ADD PRIMARY KEY (`sku`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `producttb`
---
-ALTER TABLE `producttb`
-  MODIFY `sku` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
