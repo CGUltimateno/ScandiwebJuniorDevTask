@@ -1,8 +1,8 @@
 <?php
 
-namespace app\models\ProductTypes;
+namespace app\backend\models\ProductTypes;
 
-use app\models\Product;
+use app\backend\models\Product;
 
 class DVD extends Product
 {

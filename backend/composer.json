@@ -1,0 +1,12 @@
+{
+  "name": "cgultimateno/junior-engineer-task",
+  "autoload": {
+    "psr-4": {
+      "app\\": "./"
+    }
+  },
+  "require": {
+    "ext-pdo": "*",
+    "ext-json": "*"
+  }
+}

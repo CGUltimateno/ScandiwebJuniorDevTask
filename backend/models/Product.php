@@ -1,7 +1,7 @@
 <?php
 
-namespace app\models;
-use app\core\Database;
+namespace app\backend\models;
+use app\backend\core\Database;
 
 abstract class Product
 {

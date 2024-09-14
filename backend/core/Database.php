@@ -1,7 +1,7 @@
 <?php
-namespace app\core;
+namespace app\backend\core;
 
-use app\models\Product;
+use app\backend\models\Product;
 use PDO;
 
 class Database
@@ -11,7 +11,7 @@ class Database
     public function __construct()
     {
 
-        $this->pdo = new PDO('mysql:host=' . host . ';port=3306;', user, pass);
+        $this->pdo = new PDO('mysql:host=' . 'localhost' . ';port=3306;', 'root', '12345');
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $this->pdo->query("USE juniortest;");
