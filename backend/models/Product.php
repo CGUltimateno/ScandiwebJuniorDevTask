@@ -1,7 +1,8 @@
 <?php
 
-namespace app\backend\models;
-use app\backend\core\Database;
+namespace app\models;
+use app\core\Database;
+use MongoDB\Driver\Query;
 
 abstract class Product
 {
@@ -76,6 +77,7 @@ abstract class Product
         }
         return $carry;
     }
+
     public function validatetype(){
         if(!$this->data['type']){
             return "Choose a type";

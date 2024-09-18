@@ -1,7 +1,6 @@
-<IfModule mod_rewrite.c>
-RewriteEngine On
-
+RewriteEngine ON
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z]*)$ index.php?url=$1 [QSA,L]
 
-RewriteRule ^ index.php [L]
-</IfModule>
+Header set Access-Control-Allow-Origin "*"

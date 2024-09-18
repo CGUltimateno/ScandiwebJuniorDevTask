@@ -1,90 +1,71 @@
 <?php
 
-namespace app\backend\Controller;
+namespace app\Controller;
 
-use app\backend\core\Database;
-use app\backend\models\ProductTypes\Invalid;
+use app\core\Database;
 
 class ProductController
 {
-    // Fetch all products
-    public static function index()
+    private $req;
+
+    public function __construct($req)
     {
-        header('Content-Type: application/json');
-
-        $db = new Database();
-        $products = $db->getProducts();
-
-        echo json_encode($products);
+        $this->req = $req;
     }
 
-    // Add a new product
-    public static function add()
+    public function req()
     {
-        header('Content-Type: application/json');
-        $productData = json_decode(file_get_contents('php://input'), true);
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = "app\\backend\\models\\ProductTypes\\" . $productData['type'];
-
-            if (class_exists($name)) {
-                $product = new $name($productData);
-            } else {
-                $product = new Invalid($productData);
-            }
-
-            $errors = $product->validatedata();
-
-            if (empty($errors)) {
-                $db = new Database();
-                $db->createProduct($product);
-                echo json_encode(['success' => true]);
-            } else {
-                http_response_code(400);
-                echo json_encode(['success' => false, 'errors' => $errors]);
-            }
-        } else {
-            http_response_code(405); // Method Not Allowed
-            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-        }
-    }
-
-    // Delete products
-    public static function delete()
-    {
-        header('Content-Type: application/json');
-        $productData = json_decode(file_get_contents('php://input'), true);
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $db = new Database();
-            foreach ($productData as $sku) {
-                $db->deleteProduct($sku);
-            }
-            echo json_encode(['success' => true]);
+        if ($this->req === 'GET') {
+            self::index();
+        } elseif ($this->req === 'POST') {
+            self::add();
+        } elseif ($this->req === 'DELETE') {
+            self::deleteProductsBySkus();
         } else {
             http_response_code(405);
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);
         }
     }
 
-    // Fetch a single product
-    public static function read()
+    public function index()
     {
-        header('Content-Type: application/json');
-
         $db = new Database();
+        $products = $db->getProducts();
+        echo json_encode($products);
+    }
 
-        if (isset($_GET['sku'])) {
-            $product = $db->getProduct($_GET['sku']);
-            if ($product) {
-                echo json_encode($product);
+    public function add()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $db = new Database();
+        $product = $db->createProduct($data);
+        echo json_encode($product);
+    }
+
+    public function deleteProductsBySkus()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (isset($data['skus'])) {
+            $skus = is_array($data['skus']) ? $data['skus'] : [$data['skus']];
+
+            $db = new Database();
+            $deleted = [];
+            foreach ($skus as $sku) {
+                if ($db->deleteProduct($sku)) {
+                    $deleted[] = $sku;
+                }
+            }
+            if (count($deleted) > 0) {
+                echo json_encode(['success' => true, 'message' => 'Products deleted successfully', 'deleted' => $deleted]);
             } else {
-                http_response_code(404);
-                echo json_encode(['error' => 'Product not found']);
+                echo json_encode(['success' => false, 'message' => 'No products were deleted']);
             }
         } else {
             http_response_code(400);
-            echo json_encode(['error' => 'SKU not provided']);
+            echo json_encode(['success' => false, 'message' => 'Invalid input, no SKUs provided']);
         }
     }
+
+
 }

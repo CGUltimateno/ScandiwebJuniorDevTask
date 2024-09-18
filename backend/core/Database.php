@@ -1,58 +1,57 @@
 <?php
-namespace app\backend\core;
 
-use app\backend\models\Product;
-use PDO;
+namespace app\core;
 
-class Database
+use app\models\Product;
+
+class Database extends Connection
 {
-    private PDO $pdo;
-
-    public function __construct()
-    {
-
-        $this->pdo = new PDO('mysql:host=' . 'localhost' . ';port=3306;', 'root', '12345');
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $this->pdo->query("USE juniortest;");
-    }
-
     public function getProducts()
     {
-        $statement = $this->pdo->prepare('SELECT * FROM producttb ORDER BY sku');
-        $statement->execute();
-
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement = "SELECT * FROM producttb";
+        $products = $this->get()->prepare($statement);
+        $products->execute();
+        return $products->fetchAll();
     }
+
 
     public function getProduct($sku)
     {
-        $statement = $this->pdo->prepare('SELECT * FROM producttb WHERE sku = :sku');
-        $statement->bindValue(':sku', $sku);
-        $statement->execute();
-
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        $statement = "SELECT * FROM producttb WHERE sku = :sku";
+        $product = $this->get()->prepare($statement);
+        $product->bindValue(':sku', $sku);
+        $product->execute();
+        return $product->fetch();
     }
 
     public function deleteProduct($sku)
     {
-        $statement = $this->pdo->prepare('DELETE FROM producttb WHERE sku = :sku');
-        $statement->bindValue(':sku', $sku);
-
-        return $statement->execute();
+        $statement = "DELETE FROM producttb WHERE sku = :sku";
+        $product = $this->get()->prepare($statement);
+        $product->bindValue(':sku', $sku);
+        $product->execute();
+        return $product->rowCount() > 0;
     }
 
-    public function createProduct(Product $product)
+
+
+    public function createProduct($product)
     {
-        $statement = $this->pdo->prepare("INSERT INTO producttb (sku, name, price, type, value)
-                VALUES (:sku, :name, :price, :type, :value)");
+        $statement = "INSERT INTO producttb (sku, name, price, type, value) VALUES (:sku, :name, :price, :type, :value)";
 
-        $statement->bindValue(':sku', $product->sku);
-        $statement->bindValue(':name', $product->name);
-        $statement->bindValue(':price', $product->price);
-        $statement->bindValue(':type', $product->type);
-        $statement->bindValue(':value', $product->value);
+        $stmt = $this->get()->prepare($statement);
 
-        $statement->execute();
+        // Use array values directly
+        $stmt->bindValue(':sku', $product['sku']);
+        $stmt->bindValue(':name', $product['name']);
+        $stmt->bindValue(':price', $product['price']);
+        $stmt->bindValue(':type', $product['type']);
+        $stmt->bindValue(':value', $product['value']);
+
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0 ? ['success' => true, 'message' => 'Product added successfully'] : ['success' => false, 'message' => 'Failed to add product'];
     }
+
+
 }
