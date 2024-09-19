@@ -2,56 +2,64 @@
 
 namespace app\core;
 
-use app\models\Product;
-
 class Database extends Connection
 {
     public function getProducts()
     {
-        $statement = "SELECT * FROM producttb";
-        $products = $this->get()->prepare($statement);
-        $products->execute();
-        return $products->fetchAll();
+        try {
+            $statement = "SELECT * FROM producttb";
+            $products = $this->get()->prepare($statement);
+            $products->execute();
+            return $products->fetchAll();
+        } catch (\PDOException $e) {
+            return ['success' => false, 'message' => 'Error fetching products'];
+        }
     }
-
 
     public function getProduct($sku)
     {
-        $statement = "SELECT * FROM producttb WHERE sku = :sku";
-        $product = $this->get()->prepare($statement);
-        $product->bindValue(':sku', $sku);
-        $product->execute();
-        return $product->fetch();
+        try {
+            $statement = "SELECT * FROM producttb WHERE sku = :sku";
+            $product = $this->get()->prepare($statement);
+            $product->bindValue(':sku', $sku);
+            $product->execute();
+            return $product->fetch();
+        } catch (\PDOException $e) {
+            return null;
+        }
     }
 
     public function deleteProduct($sku)
     {
-        $statement = "DELETE FROM producttb WHERE sku = :sku";
-        $product = $this->get()->prepare($statement);
-        $product->bindValue(':sku', $sku);
-        $product->execute();
-        return $product->rowCount() > 0;
+        try {
+            $statement = "DELETE FROM producttb WHERE sku = :sku";
+            $product = $this->get()->prepare($statement);
+            $product->bindValue(':sku', $sku);
+            $product->execute();
+            return $product->rowCount() > 0;
+        } catch (\PDOException $e) {
+            // Log error or handle exception
+            return false;
+        }
     }
-
-
 
     public function createProduct($product)
     {
-        $statement = "INSERT INTO producttb (sku, name, price, type, value) VALUES (:sku, :name, :price, :type, :value)";
+        try {
+            $statement = "INSERT INTO producttb (sku, name, price, type, value) VALUES (:sku, :name, :price, :type, :value)";
+            $stmt = $this->get()->prepare($statement);
 
-        $stmt = $this->get()->prepare($statement);
+            $stmt->bindValue(':sku', $product['sku']);
+            $stmt->bindValue(':name', $product['name']);
+            $stmt->bindValue(':price', $product['price']);
+            $stmt->bindValue(':type', $product['type']);
+            $stmt->bindValue(':value', $product['value']);
 
-        // Use array values directly
-        $stmt->bindValue(':sku', $product['sku']);
-        $stmt->bindValue(':name', $product['name']);
-        $stmt->bindValue(':price', $product['price']);
-        $stmt->bindValue(':type', $product['type']);
-        $stmt->bindValue(':value', $product['value']);
+            $stmt->execute();
 
-        $stmt->execute();
-
-        return $stmt->rowCount() > 0 ? ['success' => true, 'message' => 'Product added successfully'] : ['success' => false, 'message' => 'Failed to add product'];
+            return ['success' => $stmt->rowCount() > 0, 'message' => 'Product added successfully'];
+        } catch (\PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to add product'];
+        }
     }
-
-
 }

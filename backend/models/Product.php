@@ -2,7 +2,6 @@
 
 namespace app\models;
 use app\core\Database;
-use MongoDB\Driver\Query;
 
 abstract class Product
 {
@@ -19,26 +18,10 @@ abstract class Product
         $this->data = $data;
     }
 
-    public function validatedata(){
-        $errors = [];
-        if($this->validatesku()){
-            $errors[]= $this->validatesku();
-        }
-        if($this->validatename()){
-            $errors[] = $this->validatename();
-        }
-        if($this->validateprice()){
-            $errors[] = $this->validateprice();
-        }
-        if($this->validatetype()){
-            $errors[] = $this->validatetype();
-        }
-        if($this->validate()){
-            $errors[] = $this->validate();
-        }
-        return $errors;
+
+    public function callValidate() {
+        return $this->validate();
     }
-    
     public function validatesku(){
         if(!$this->data['sku']){
             return "Please enter a value";

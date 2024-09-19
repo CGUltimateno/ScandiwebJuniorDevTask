@@ -1,0 +1,78 @@
+.ap-container {
+  height: 100vh;
+  padding: 0 5%;
+
+  .ap-body {
+    margin: 2vh 0;
+    height: 74vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column; // Stack elements vertically
+    align-items: flex-start; // Align items to the start (left)
+
+    form {
+      width: 100%;
+      max-width: 600px; // Set a max-width for the form
+      padding: 20px 0; // Add padding for better spacing
+      background: #fff; // Add background color
+      border-radius: 8px; // Add border radius
+
+      @media (max-width: 900px) {
+        width: 100%;
+      }
+
+      .alert {
+        min-width: 400px;
+        width: fit-content;
+        height: 40px;
+        padding: 7px 20px;
+        margin: auto;
+        @media (max-width: 640px) {
+          min-width: 320px;
+          max-width: 98%;
+          min-height: 40px;
+          height: fit-content;
+        }
+      }
+
+      .input-wrapper {
+        width: 100%;
+        margin: 15px 0; // Adjust margin for better spacing
+        display: flex;
+        flex-direction: row; // Align label and input horizontally
+        align-items: center; // Align items vertically in the center
+
+        label {
+          width: 150px; // Set a fixed width for labels
+          margin-bottom: 0; // Remove bottom margin
+          font-weight: bold; // Make label bold
+        }
+
+        input,
+        select {
+          width: calc(100% - 150px); // Adjust width to align with label
+          padding: 10px;
+          background: #f1f1f1;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          outline: none;
+        }
+      }
+
+      .helper-text {
+        width: 100%;
+        margin-top: 5px; // Add margin above helper text
+        color: #258;
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  form {
+    width: 100%;
+  }
+  .logo {
+    display: none;
+  }
+}

@@ -8,13 +8,16 @@ class DVD extends Product
 {
     protected function validate()
     {
-        if(!$this->data['size']){
-            return"Please enter a size";
+        if (!$this->data['value']) {
+            return "Please enter a size";
         }
-        if(is_numeric($this->data['size']) &&floatval($this->data['size'] >=0)){
-            $this->value = 'Size' . $this->data['size'] . 'MBs';
+
+        // Check if size is numeric and non-negative
+        if (is_numeric($this->data['value']) && floatval($this->data['value']) >= 0) {
+            $this->value = 'Size: ' . $this->data['value'] . ' MBs';
             return "";
         }
+
         return "Invalid Size";
     }
-};
+}

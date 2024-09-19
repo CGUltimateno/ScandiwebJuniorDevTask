@@ -8,14 +8,29 @@ class Furniture extends Product
 {
     protected function validate()
     {
-        if (!$this->data['height'] || !$this->data['height'] && !$this->data['height']) {
-            return "Please enter the right dimensions";
+        if (!isset($this->data['value']) || empty($this->data['value'])) {
+            return "Please enter the dimensions in the format height x width x length";
         }
-        if (is_numeric($this->data['height']) && is_numeric($this->data['width']) && is_numeric($this->data['length'])
-            && floatval($this->data['height'] >= 0) && floatval($this->data['width'] >= 0) && floatval($this->data['length'] >= 0)) {
-            $this->value = 'Dimensions' . $this->data['height'] . 'x' . $this->data['width'] . 'x' . $this->data['length'] . 'cm';
-            return "";
+
+        $dimensions = explode('x', $this->data['value']);
+
+        if (count($dimensions) !== 3) {
+            return "Please enter the dimensions in the format height x width x length";
         }
-        return "Please enter the right dimensions";
+
+        list($height, $width, $length) = $dimensions;
+
+        if (!is_numeric($height) || floatval($height) < 0) {
+            return "Invalid height: must be a non-negative number";
+        }
+        if (!is_numeric($width) || floatval($width) < 0) {
+            return "Invalid width: must be a non-negative number";
+        }
+        if (!is_numeric($length) || floatval($length) < 0) {
+            return "Invalid length: must be a non-negative number";
+        }
+
+        $this->value = $height . 'x' . $width . 'x' . $length . ' cm';
+        return "";
     }
 }

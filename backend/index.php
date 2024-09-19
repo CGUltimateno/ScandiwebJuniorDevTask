@@ -1,37 +1,30 @@
 <?php
 
-// Enable error reporting
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/config.php';
 
 use app\Controller\ProductController;
 
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = trim($path, '/');
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Handle routes
-switch ($path) {
-    case 'api/products': // Route for fetching all products
-        $controller = new ProductController('GET');
-        $controller->req();
-        break;
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
-    case 'api/add': // Route for adding products
-        $controller = new ProductController('POST');
-        $controller->req();
-        break;
+$path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-    case 'api/delete':
-        $controller = new ProductController('DELETE');
-        $controller->req();
-        break;
+$controllerMap = [
+    'api/products' => 'GET',
+    'api/add' => 'POST',
+    'api/delete' => 'DELETE',
+];
 
-    default:
-        http_response_code(404);
-        echo json_encode(['error' => 'Not Found']);
-        break;
+if (isset($controllerMap[$path])) {
+    $controller = new ProductController($controllerMap[$path]);
+    $controller->req();
+} else {
+    http_response_code(404);
+    echo json_encode(['error' => 'Not Found']);
 }

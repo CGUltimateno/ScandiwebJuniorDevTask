@@ -1,5 +1,3 @@
-// src/components/Products.js
-
 import React, { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -52,13 +50,13 @@ function Products() {
     }, []);
 
     const leftBtn = (
-        <Link to='/add'>
+        <Link to='/add-product'>
             <button className="btn btn-primary">ADD</button>
         </Link>
     );
 
     const rightBtn = (
-        <button className="btn btn-danger" onClick={massDelete}>MASS DELETE</button>
+        <button className="btn btn-danger" id="delete-product-btn" onClick={massDelete}>MASS DELETE</button>
     );
 
     return (
