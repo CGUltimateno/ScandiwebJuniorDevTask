@@ -52,12 +52,13 @@ function Products() {
 
     return (
         <section className='p-container'>
-            <Header onMassDelete={massDelete} />
+            <h2>Product List</h2>
+            <Header onMassDelete={massDelete}/>
             <div className="p-body">
                 {dataLoaded ? (
                     productList.length ? (
                         productList.map(product => (
-                            <Prodbox data={product} key={product.sku} />
+                            <Prodbox data={product} key={product.sku}/>
                         ))
                     ) : (
                         <p className='p-message'>No data</p>
@@ -66,7 +67,7 @@ function Products() {
                     <div className="p-message">Oops, something went wrong.</div>
                 ) : null}
             </div>
-            <Footer />
+            <Footer/>
         </section>
     );
 }

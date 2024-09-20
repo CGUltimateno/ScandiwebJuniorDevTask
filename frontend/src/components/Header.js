@@ -21,7 +21,6 @@ function Header({ onSave, onMassDelete }) {
             </Link>
         );
     } else if (location.pathname === '/') {
-        title = 'Product List';
         rightBtn = (
             <button className="btn btn-danger" id="delete-product-btn" onClick={onMassDelete}>
                 Mass Delete
