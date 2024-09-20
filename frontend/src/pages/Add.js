@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Footer from '../components/Footer';
-import Header from '../components/Header';
 import '../styles/add.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import fetcher from '../components/fetcher';
+import Header from "../components/Header";
 
-function Products() {
+function AddProduct() {
     const [productType, setProductType] = useState('');
     const [formData, setFormData] = useState({
         sku: '',
@@ -28,56 +28,47 @@ function Products() {
 
     const navigate = useNavigate();
 
-    // Handle form field changes
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setFormData({...formData, [name]: value});
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
 
-        // Validate fields and set errors
         if (name === 'sku' && value.trim() === '') {
-            setErrors(prevErrors => ({...prevErrors, sku: 'SKU is required'}));
+            setErrors(prevErrors => ({ ...prevErrors, sku: 'SKU is required' }));
         } else {
-            setErrors(prevErrors => ({...prevErrors, sku: ''}));
+            setErrors(prevErrors => ({ ...prevErrors, sku: '' }));
         }
 
         if (name === 'name' && value.trim() === '') {
-            setErrors(prevErrors => ({...prevErrors, name: 'Name is required'}));
+            setErrors(prevErrors => ({ ...prevErrors, name: 'Name is required' }));
         } else {
-            setErrors(prevErrors => ({...prevErrors, name: ''}));
+            setErrors(prevErrors => ({ ...prevErrors, name: '' }));
         }
 
         if (name === 'price' && (value.trim() === '' || isNaN(value))) {
-            setErrors(prevErrors => ({...prevErrors, price: 'Price must be a number'}));
+            setErrors(prevErrors => ({ ...prevErrors, price: 'Price must be a number' }));
         } else {
-            setErrors(prevErrors => ({...prevErrors, price: ''}));
+            setErrors(prevErrors => ({ ...prevErrors, price: '' }));
+        }
+
+        if (name === 'value' && value.trim() === '') {
+            setErrors(prevErrors => ({ ...prevErrors, value: 'Value is required' }));
+        } else {
+            setErrors(prevErrors => ({ ...prevErrors, value: '' }));
         }
     };
 
-    // Handle type switcher change
     const handleTypeChange = (e) => {
         setProductType(e.target.value);
-        setFormData({...formData, value: ''});
-        setFurnitureDimensions({length: '', width: '', height: ''});
-        setErrors({...errors, value: '', dimensions: ''}); // Reset errors on type change
+        setFormData({ ...formData, value: '' });
+        setFurnitureDimensions({ length: '', width: '', height: '' });
+        setErrors({ ...errors, value: '', dimensions: '' });
     };
 
-    // Handle Furniture dimension changes
     const handleDimensionChange = (e) => {
-        const {name, value} = e.target;
-        setFurnitureDimensions({...furnitureDimensions, [name]: value});
-
-        // Validate dimensions
-        if (value.trim() === '' || isNaN(value)) {
-            setErrors(prevErrors => ({
-                ...prevErrors,
-                dimensions: 'All dimensions must be valid numbers'
-            }));
-        } else {
-            setErrors(prevErrors => ({...prevErrors, dimensions: ''}));
-        }
+        const { name, value } = e.target;
+        setFurnitureDimensions({ ...furnitureDimensions, [name]: value });
     };
 
-    // Save product function
     const saveProduct = () => {
         let formattedData = {
             sku: formData.sku,
@@ -87,7 +78,6 @@ function Products() {
             value: ''
         };
 
-        // Check if any required fields are empty
         if (formData.sku.trim() === '' || formData.name.trim() === '' || isNaN(formData.price)) {
             alert('Please fill all required fields with valid data.');
             return;
@@ -96,28 +86,25 @@ function Products() {
         if (productType === 'Book') {
             const parsedValue = parseFloat(formData.value);
             if (!isNaN(parsedValue)) {
-                formattedData.value = formData.value; // Set the value as the weight
+                formattedData.value = formData.value;
             } else {
-                setErrors(prevErrors => ({...prevErrors, value: 'Please enter a valid weight (KG) for the Book'}));
+                alert('Please enter a valid weight (KG) for the Book');
                 return;
             }
         } else if (productType === 'Furniture') {
-            const {length, width, height} = furnitureDimensions;
-            if (length && width && height && !isNaN(length) && !isNaN(width) && !isNaN(height)) {
-                formattedData.value = `${height}x${width}x${length}`; // Format as HxWxL
-            } else {
-                setErrors(prevErrors => ({
-                    ...prevErrors,
-                    dimensions: 'Please enter valid dimensions (length, width, height)'
-                }));
+            const { length, width, height } = furnitureDimensions;
+            if (length.trim() === '' || width.trim() === '' || height.trim() === '' || isNaN(length) || isNaN(width) || isNaN(height)) {
+                alert('Please enter valid dimensions (length, width, height)');
                 return;
+            } else {
+                formattedData.value = `${height}x${width}x${length}`;
             }
         } else if (productType === 'DVD') {
             const parsedValue = parseFloat(formData.value);
             if (!isNaN(parsedValue)) {
-                formattedData.value = formData.value; // Set the value as the size in MB
+                formattedData.value = formData.value;
             } else {
-                setErrors(prevErrors => ({...prevErrors, value: 'Please enter a valid size (MB) for the DVD'}));
+                alert('Please enter a valid size (MB) for the DVD');
                 return;
             }
         } else {
@@ -125,11 +112,9 @@ function Products() {
             return;
         }
 
-        // Submit to API
         fetcher('POST', formattedData, 'api/add')
             .then(response => {
                 if (response.success) {
-                    alert('Product saved successfully!');
                     navigate('/');
                 } else {
                     alert('Failed to save product.');
@@ -140,28 +125,24 @@ function Products() {
 
     return (
         <section className='ap-container'>
-            <Header title='Add Product'
-                    rightBtn={<Link to='/'>
-                        <button className="btn btn-secondary">Cancel</button>
-                    </Link>}
-                    leftBtn={<button className="btn btn-primary" onClick={saveProduct}>Save</button>}/>
+            <Header onSave={saveProduct} />
             <div className="ap-body">
                 <form id="product_form">
                     <div className="input-wrapper">
                         <label htmlFor="sku">SKU:</label>
-                        <input type="text" id="sku" name="sku" value={formData.sku} onChange={handleInputChange}/>
+                        <input type="text" id="sku" name="sku" value={formData.sku} onChange={handleInputChange} />
                         {errors.sku && <small className="error-text">{errors.sku}</small>}
                     </div>
 
                     <div className="input-wrapper">
                         <label htmlFor="name">Name:</label>
-                        <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange}/>
+                        <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} />
                         {errors.name && <small className="error-text">{errors.name}</small>}
                     </div>
 
                     <div className="input-wrapper">
                         <label htmlFor="price">Price ($):</label>
-                        <input type="text" id="price" name="price" value={formData.price} onChange={handleInputChange}/>
+                        <input type="text" id="price" name="price" value={formData.price} onChange={handleInputChange} />
                         {errors.price && <small className="error-text">{errors.price}</small>}
                     </div>
 
@@ -179,8 +160,7 @@ function Products() {
                         <>
                             <div className="input-wrapper">
                                 <label htmlFor="size">Size (MB):</label>
-                                <input type="text" id="size" name="value" value={formData.value}
-                                       onChange={handleInputChange}/>
+                                <input type="text" id="size" name="value" value={formData.value} onChange={handleInputChange} />
                                 {errors.value && <small className="error-text">{errors.value}</small>}
                             </div>
                             <small className="form-text text-muted">Please provide the size in MB.</small>
@@ -191,8 +171,7 @@ function Products() {
                         <>
                             <div className="input-wrapper">
                                 <label htmlFor="weight">Weight (KG):</label>
-                                <input type="text" id="weight" name="value" value={formData.value}
-                                       onChange={handleInputChange}/>
+                                <input type="text" id="weight" name="value" value={formData.value} onChange={handleInputChange} />
                                 {errors.value && <small className="error-text">{errors.value}</small>}
                             </div>
                             <small className="form-text text-muted">Please provide the weight in KG.</small>
@@ -203,29 +182,25 @@ function Products() {
                         <>
                             <div className="input-wrapper">
                                 <label htmlFor="length">Length (CM):</label>
-                                <input type="text" id="length" name="length" value={furnitureDimensions.length}
-                                       onChange={handleDimensionChange}/>
+                                <input type="text" id="length" name="length" value={furnitureDimensions.length} onChange={handleDimensionChange} />
                             </div>
                             <div className="input-wrapper">
                                 <label htmlFor="width">Width (CM):</label>
-                                <input type="text" id="width" name="width" value={furnitureDimensions.width}
-                                       onChange={handleDimensionChange}/>
+                                <input type="text" id="width" name="width" value={furnitureDimensions.width} onChange={handleDimensionChange} />
                             </div>
                             <div className="input-wrapper">
                                 <label htmlFor="height">Height (CM):</label>
-                                <input type="text" id="height" name="height" value={furnitureDimensions.height}
-                                       onChange={handleDimensionChange}/>
+                                <input type="text" id="height" name="height" value={furnitureDimensions.height} onChange={handleDimensionChange} />
                                 {errors.dimensions && <small className="error-text">{errors.dimensions}</small>}
                             </div>
-                            <small className="form-text text-muted">Please provide the dimensions in HxWxL
-                                format.</small>
+                            <small className="form-text text-muted">Please provide the dimensions in HxWxL format.</small>
                         </>
                     )}
                 </form>
             </div>
-            <Footer/>
+            <Footer />
         </section>
     );
 }
 
-export default Products;
+export default AddProduct;

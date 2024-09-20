@@ -1,6 +1,7 @@
+// pages/Products.js
 import React, { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
-import Header from '../components/Header';
+import Header from '../components/Header'; // Import the Header
 import '../styles/products.scss';
 import { Link } from 'react-router-dom';
 import fetcher from '../components/fetcher';
@@ -49,19 +50,9 @@ function Products() {
             .catch(() => setError(true));
     }, []);
 
-    const leftBtn = (
-        <Link to='/add-product'>
-            <button className="btn btn-primary">ADD</button>
-        </Link>
-    );
-
-    const rightBtn = (
-        <button className="btn btn-danger" id="delete-product-btn" onClick={massDelete}>MASS DELETE</button>
-    );
-
     return (
         <section className='p-container'>
-            <Header title='Product List' leftBtn={leftBtn} rightBtn={rightBtn} />
+            <Header onMassDelete={massDelete} />
             <div className="p-body">
                 {dataLoaded ? (
                     productList.length ? (
@@ -73,9 +64,7 @@ function Products() {
                     )
                 ) : error ? (
                     <div className="p-message">Oops, something went wrong.</div>
-                ) : (
-                    <div className="p-message">Loading...</div>
-                )}
+                ) : null}
             </div>
             <Footer />
         </section>
