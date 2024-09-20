@@ -79,7 +79,7 @@ function AddProduct() {
         };
 
         if (formData.sku.trim() === '' || formData.name.trim() === '' || isNaN(formData.price)) {
-            alert('Please fill all required fields with valid data.');
+            navigate('/');
             return;
         }
 
@@ -88,13 +88,13 @@ function AddProduct() {
             if (!isNaN(parsedValue)) {
                 formattedData.value = formData.value;
             } else {
-                alert('Please enter a valid weight (KG) for the Book');
+                navigate('/');
                 return;
             }
         } else if (productType === 'Furniture') {
             const { length, width, height } = furnitureDimensions;
             if (length.trim() === '' || width.trim() === '' || height.trim() === '' || isNaN(length) || isNaN(width) || isNaN(height)) {
-                alert('Please enter valid dimensions (length, width, height)');
+                navigate('/');
                 return;
             } else {
                 formattedData.value = `${height}x${width}x${length}`;
@@ -104,11 +104,11 @@ function AddProduct() {
             if (!isNaN(parsedValue)) {
                 formattedData.value = formData.value;
             } else {
-                alert('Please enter a valid size (MB) for the DVD');
+                navigate('/');
                 return;
             }
         } else {
-            alert('Please select a valid product type');
+            navigate('/');
             return;
         }
 
@@ -117,10 +117,10 @@ function AddProduct() {
                 if (response.success) {
                     navigate('/');
                 } else {
-                    alert('Failed to save product.');
+                    navigate('/');
                 }
             })
-            .catch(() => alert('An error occurred while saving the product.'));
+            .catch(() => navigate('/'));
     };
 
     return (
