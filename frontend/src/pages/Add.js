@@ -94,7 +94,7 @@ function AddProduct() {
         } else if (productType === 'Furniture') {
             const { length, width, height } = furnitureDimensions;
             if (length.trim() === '' || width.trim() === '' || height.trim() === '' || isNaN(length) || isNaN(width) || isNaN(height)) {
-                navigate('/');
+                alert('Please enter valid dimensions (length, width, height)');
                 return;
             } else {
                 formattedData.value = `${height}x${width}x${length}`;
@@ -117,10 +117,10 @@ function AddProduct() {
                 if (response.success) {
                     navigate('/');
                 } else {
-                    navigate('/');
+                    alert('Failed to save product.');
                 }
             })
-            .catch(() => navigate('/'));
+            .catch(() => alert('An error occurred while saving the product.'));
     };
 
     return (
