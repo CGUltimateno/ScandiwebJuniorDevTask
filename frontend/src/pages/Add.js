@@ -115,11 +115,11 @@ function AddProduct() {
         try {
             // Check if the product with the SKU exists
             const existingProduct = await fetcher('GET', {}, `api/products/${formData.sku}`);
-            console.log(existingProduct.data.sku)
-            if (existingProduct && existingProduct.data.sku) {
-                // Product exists, delete it
+            if (existingProduct && existingProduct.data && existingProduct.data.sku) {
                 await fetcher('DELETE', { skus: [formData.sku] }, 'api/delete');
                 console.log('Product deleted:', formData.sku);
+            } else {
+                console.log('Product does not exist:', formData.sku);
             }
 
             const response = await fetcher('POST', formattedData, 'api/add');
