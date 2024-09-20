@@ -20,7 +20,14 @@ class ProductController
     {
         switch ($this->req) {
             case 'GET':
-                $this->index();
+                if (isset($_GET['sku'])) {
+                    $this->getProductBySku($_GET['sku']);
+                } elseif (strpos($_SERVER['REQUEST_URI'], 'api/products/sku') !== false) {
+                    $sku = basename($_SERVER['REQUEST_URI']);
+                    $this->getProductBySku($sku);
+                } else {
+                    $this->index();
+                }
                 break;
             case 'POST':
                 $this->add();
@@ -38,6 +45,18 @@ class ProductController
         $db = new Database();
         $products = $db->getProducts();
         $this->sendResponse(200, $products);
+    }
+
+    public function getProductBySku($sku)
+    {
+        $db = new Database();
+        $product = $db->getProduct($sku);
+
+        if ($product) {
+            $this->sendResponse(200, $product);
+        } else {
+            $this->sendResponse(404, ['success' => false, 'message' => 'Product not found']);
+        }
     }
 
     private function add()

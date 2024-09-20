@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
 import '../styles/add.scss';
-import { Link, useNavigate } from 'react-router-dom';
 import fetcher from '../components/fetcher';
-import Header from "../components/Header";
 
 function AddProduct() {
     const [productType, setProductType] = useState('');
@@ -69,7 +69,7 @@ function AddProduct() {
         setFurnitureDimensions({ ...furnitureDimensions, [name]: value });
     };
 
-    const saveProduct = () => {
+    const saveProduct = async () => {
         let formattedData = {
             sku: formData.sku,
             name: formData.name,
@@ -79,7 +79,7 @@ function AddProduct() {
         };
 
         if (formData.sku.trim() === '' || formData.name.trim() === '' || isNaN(formData.price)) {
-            navigate('/');
+            alert('Please fill all required fields with valid data.');
             return;
         }
 
@@ -88,7 +88,7 @@ function AddProduct() {
             if (!isNaN(parsedValue)) {
                 formattedData.value = formData.value;
             } else {
-                navigate('/');
+                alert('Please enter a valid weight (KG) for the Book');
                 return;
             }
         } else if (productType === 'Furniture') {
@@ -104,23 +104,34 @@ function AddProduct() {
             if (!isNaN(parsedValue)) {
                 formattedData.value = formData.value;
             } else {
-                navigate('/');
+                alert('Please enter a valid size (MB) for the DVD');
                 return;
             }
         } else {
-            navigate('/');
+            alert('Please select a valid product type');
             return;
         }
 
-        fetcher('POST', formattedData, 'api/add')
-            .then(response => {
-                if (response.success) {
-                    navigate('/');
-                } else {
-                    alert('Failed to save product.');
-                }
-            })
-            .catch(() => alert('An error occurred while saving the product.'));
+        try {
+            // Check if the product with the SKU exists
+            const existingProduct = await fetcher('GET', {}, `api/products/${formData.sku}`);
+            console.log(existingProduct.data.sku)
+            if (existingProduct && existingProduct.data.sku) {
+                // Product exists, delete it
+                await fetcher('DELETE', { skus: [formData.sku] }, 'api/delete');
+                console.log('Product deleted:', formData.sku);
+            }
+
+            const response = await fetcher('POST', formattedData, 'api/add');
+            if (response.success) {
+                navigate('/');
+            } else {
+                alert('Failed to save product.');
+            }
+        } catch (err) {
+            console.error('Error during saveProduct:', err);
+            alert('An error occurred while saving the product.');
+        }
     };
 
     return (
@@ -156,6 +167,7 @@ function AddProduct() {
                         </select>
                     </div>
 
+                    {/* Type-specific input fields */}
                     {productType === 'DVD' && (
                         <>
                             <div className="input-wrapper">
