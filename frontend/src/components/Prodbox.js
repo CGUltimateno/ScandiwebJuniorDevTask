@@ -5,15 +5,17 @@ function Prodbox({ data }) {
         e.currentTarget.classList.toggle('selected');
     };
 
-    const TypeHandler = (data) => {
-        if (data.type === 'DVD') {
-            return data.type = 'Size';
-        } else if (data.type === 'Book') {
-            return data.type = 'Weight';
+    const TypeHandler = (type) => {
+        if (type === 'DVD') {
+            return 'Size';
+        } else if (type === 'Book') {
+            return 'Weight';
         } else {
-            return data.type = 'Dimensions';
+            return 'Dimensions';
         }
     };
+
+    const transformedType = TypeHandler(data.type);
 
     return (
         <div className="product-wrapper">
@@ -21,7 +23,7 @@ function Prodbox({ data }) {
             <p>{data.sku}</p>
             <p>{data.name}</p>
             <p>{data.price} $</p>
-            <p>{data.type}: {data.value + (data.type === 'DVD' ? ' MB' : data.type === 'Book' ? ' KG' : '')}</p>
+            <p>{transformedType}: {data.value + (data.type === 'DVD' ? ' MB' : data.type === 'Book' ? ' KG' : '')}</p>
         </div>
     );
 }
