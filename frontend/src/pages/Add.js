@@ -97,7 +97,7 @@ function AddProduct() {
                 alert('Please enter valid dimensions (length, width, height)');
                 return;
             } else {
-                formattedData.value = `${height}x${width}x${length}`;
+                formattedData.value = `${length}x${width}x${height}`;
             }
         } else if (productType === 'DVD') {
             const parsedValue = parseFloat(formData.value);
