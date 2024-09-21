@@ -8,15 +8,15 @@
     height: 74vh;
     overflow-y: auto;
     display: flex;
-    flex-direction: column; // Stack elements vertically
-    align-items: flex-start; // Align items to the start (left)
+    flex-direction: column;
+    align-items: flex-start;
 
     form {
       width: 100%;
-      max-width: 600px; // Set a max-width for the form
-      padding: 20px 0; // Add padding for better spacing
-      background: #fff; // Add background color
-      border-radius: 8px; // Add border radius
+      max-width: 600px;
+      padding: 20px 0;
+      background: #fff;
+      border-radius: 8px;
 
       @media (max-width: 900px) {
         width: 100%;
@@ -38,20 +38,20 @@
 
       .input-wrapper {
         width: 100%;
-        margin: 15px 0; // Adjust margin for better spacing
+        margin: 15px 0;
         display: flex;
-        flex-direction: row; // Align label and input horizontally
-        align-items: center; // Align items vertically in the center
+        flex-direction: row;
+        align-items: center;
 
         label {
-          width: 150px; // Set a fixed width for labels
-          margin-bottom: 0; // Remove bottom margin
-          font-weight: bold; // Make label bold
+          width: 150px;
+          margin-bottom: 0;
+          font-weight: bold;
         }
 
         input,
         select {
-          width: calc(100% - 150px); // Adjust width to align with label
+          width: calc(100% - 150px);
           padding: 10px;
           background: #f1f1f1;
           border: 1px solid #ccc;
@@ -62,7 +62,7 @@
 
       .helper-text {
         width: 100%;
-        margin-top: 5px; // Add margin above helper text
+        margin-top: 5px;
         color: #258;
       }
     }

@@ -11,8 +11,6 @@ class Book extends Product
         if (!$this->data['value']) {
             return "Please provide a Weight";
         }
-
-        // Check if weight is numeric and non-negative
         if (is_numeric($this->data['value']) && floatval($this->data['value']) >= 0) {
             $this->value = 'Weight: ' . $this->data['weight'] . ' KGs';
             return "";

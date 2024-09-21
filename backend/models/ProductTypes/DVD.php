@@ -12,7 +12,6 @@ class DVD extends Product
             return "Please enter a size";
         }
 
-        // Check if size is numeric and non-negative
         if (is_numeric($this->data['value']) && floatval($this->data['value']) >= 0) {
             $this->value = 'Size: ' . $this->data['value'] . ' MBs';
             return "";

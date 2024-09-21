@@ -1,5 +1,5 @@
 export default function fetcher(method = 'GET', data = {}, endpoint = '') {
-    const url = `http://localhost:8000/${endpoint}`; // Use the endpoint parameter
+    const url = `http://localhost:8000/${endpoint}`;
 
     const param = {
         method: method,
@@ -12,7 +12,6 @@ export default function fetcher(method = 'GET', data = {}, endpoint = '') {
         param.body = JSON.stringify(data);
     }
 
-    // Return the fetch promise
     return fetch(url, param)
         .then((response) => {
             if (!response.ok) {

@@ -1,9 +1,7 @@
-// pages/Products.js
 import React, { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
-import Header from '../components/Header'; // Import the Header
+import Header from '../components/Header';
 import '../styles/products.scss';
-import { Link } from 'react-router-dom';
 import fetcher from '../components/fetcher';
 import Prodbox from '../components/Prodbox';
 

@@ -15,17 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-// Update this routing logic to handle dynamic SKU paths
 $controllerMap = [
     'api/products' => 'GET',
     'api/add' => 'POST',
     'api/delete' => 'DELETE',
 ];
 
-// Check if the path starts with 'api/products/' and extract the SKU
 if (preg_match('/^api\/products\/(.+)/', $path, $matches)) {
     $controller = new ProductController('GET');
-    $controller->getProductBySku($matches[1]); // Pass the SKU to the controller
+    $controller->getProductBySku($matches[1]);
 } elseif (isset($controllerMap[$path])) {
     $controller = new ProductController($controllerMap[$path]);
     $controller->req();

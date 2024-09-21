@@ -113,7 +113,6 @@ function AddProduct() {
         }
 
         try {
-            // Check if the product with the SKU exists
             const existingProduct = await fetcher('GET', {}, `api/products/${formData.sku}`);
             if (existingProduct && existingProduct.data && existingProduct.data.sku) {
                 await fetcher('DELETE', { skus: [formData.sku] }, 'api/delete');
@@ -166,8 +165,6 @@ function AddProduct() {
                             <option value="Furniture">Furniture</option>
                         </select>
                     </div>
-
-                    {/* Type-specific input fields */}
                     {productType === 'DVD' && (
                         <>
                             <div className="input-wrapper">

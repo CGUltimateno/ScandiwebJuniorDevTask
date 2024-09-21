@@ -10,7 +10,6 @@
     flex-wrap: wrap;
     gap: 7vh 6.66%;
     overflow-y: auto;
-    // Scrollbar styling omitted for brevity
 
     .product-wrapper {
       position: relative;
@@ -62,8 +61,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #3338;  // Ensures only bottom border
-  border-top: none;  // Explicitly removes any top border, if applied accidentally
+  border-bottom: 2px solid #3338;
+  border-top: none;
 
   @media (max-width: 640px) {
     flex-direction: column;

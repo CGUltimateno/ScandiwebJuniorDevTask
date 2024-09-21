@@ -38,7 +38,6 @@ class Database extends Connection
             $product->execute();
             return $product->rowCount() > 0;
         } catch (\PDOException $e) {
-            // Log error or handle exception
             return false;
         }
     }
